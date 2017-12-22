@@ -7,6 +7,12 @@
 ##############################################################################
 from moveable_object import MoveableObject
 
-Class Torpedo(MoveableObject):
+INITIAL_HEADING = 0.0
+
+class Torpedo(MoveableObject):
     def __init__(self):
         MoveableObject.__init__(self)
+        self.__heading = INITIAL_HEADING
+
+    def get_heading(self):
+        return self.__heading
