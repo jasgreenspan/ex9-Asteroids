@@ -10,14 +10,17 @@ from moveable_object import MoveableObject
 
 RADIUS_FACTOR = 10
 RADIUS_CORRECTER = 5
+ASTEROID_INITIAL_RADIUS = 3
+MIN_ASTEROID_SPEED = -3
+MAX_ASTEROID_SPEED = 3
+
 
 class Asteroid(MoveableObject):
-
     def __init__(self):
-        x_speed = random.randint(-3, 3)
-        y_speed = random.randint(-3, 3)
+        x_speed = random.randint(MIN_ASTEROID_SPEED, MAX_ASTEROID_SPEED)
+        y_speed = random.randint(MIN_ASTEROID_SPEED, MAX_ASTEROID_SPEED)
         MoveableObject.__init__(self, x_speed, y_speed)
-        self.__size = 3
+        self.__size = ASTEROID_INITIAL_RADIUS
 
     def get_size(self):
         return self.__size
@@ -27,7 +30,7 @@ class Asteroid(MoveableObject):
 
     def get_radius(self):
         return (self.__size * RADIUS_FACTOR) - RADIUS_CORRECTER
-    
+
     def has_intersection(self, obj):
         intersection = False
         distance = math.sqrt(((obj.get_x() - self.get_x()) ** 2) + (
