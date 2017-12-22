@@ -1,6 +1,6 @@
 ##############################################################################
 # FILE : moveable_object.py
-# WRITER : Jason Greenspan, jasonmg, 336126362; Yonatan Chamudot
+# WRITER : Jason Greenspan, jasonmg, 336126362; Yonatan Chamudot, ychamudot, 312516289
 # EXERCISE : intro2cs ex# 2017-2018
 # DESCRIPTION: Defines a parent-class for moveable objects.
 ##############################################################################
