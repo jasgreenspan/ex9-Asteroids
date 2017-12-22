@@ -1,6 +1,6 @@
 ##############################################################################
 # FILE : asteroids_main.py
-# WRITER : Jason Greenspan, jasonmg, 336126362; Yonatan Chamudot
+# WRITER : Jason Greenspan, jasonmg, 336126362; Yonatan Chamudot, ychamudot, 312516289
 # EXERCISE : intro2cs ex9 2017-2018
 # DESCRIPTION: Runs the asteroid game.
 ##############################################################################
