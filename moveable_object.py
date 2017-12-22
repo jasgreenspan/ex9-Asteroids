@@ -7,7 +7,7 @@
 import random
 from screen import Screen
 
-MAX_SPEED = 3
+MAX_SPEED = 10
 
 class MoveableObject:    
     
