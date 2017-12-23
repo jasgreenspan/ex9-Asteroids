@@ -12,7 +12,7 @@ from ship import Ship
 from asteroid import Asteroid
 from torpedo import Torpedo
 
-DEFAULT_ASTEROIDS_NUM = 3
+DEFAULT_ASTEROIDS_NUM = 12
 CRASH_TITLE = 'You crashed!'
 CRASH_MESSAGE = 'You lost a life'
 TURN_DEG = 7
@@ -89,6 +89,12 @@ class GameRunner:
                 self._screen.remove_life()
                 self._screen.unregister_asteroid(asteroid)
                 self.asteroids.remove(asteroid)
+            for torpedo in self.torpedoes:
+                if asteroid.has_intersection(torpedo):
+                    self._screen.unregister_asteroid(asteroid)
+                    self.asteroids.remove(asteroid)
+                    self._screen.unregister_torpedo(torpedo)
+                    self.torpedoes.remove(torpedo)
 
         if Screen.is_space_pressed(self._screen):
             current_tor = Torpedo()
