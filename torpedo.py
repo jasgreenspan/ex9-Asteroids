@@ -7,14 +7,12 @@
 ##############################################################################
 from moveable_object import MoveableObject
 
-INITIAL_HEADING = 0.0
 TORPEDO_RADIUS = 4
 TORPEDO_SPEED = 10
 
 class Torpedo(MoveableObject):
     def __init__(self):
         MoveableObject.__init__(self)
-        self.__heading = INITIAL_HEADING
         self.__radius = TORPEDO_RADIUS
         self.set_x_speed(TORPEDO_SPEED)
         self.set_y_speed(TORPEDO_SPEED)
