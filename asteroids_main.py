@@ -12,10 +12,16 @@ from ship import Ship
 from asteroid import Asteroid
 from torpedo import Torpedo
 
-DEFAULT_ASTEROIDS_NUM = 5
+DEFAULT_ASTEROIDS_NUM = 3
 CRASH_TITLE = 'You crashed!'
 CRASH_MESSAGE = 'You lost a life'
 TURN_DEG = 7
+WIN_TITLE = 'You win!!!'
+WIN_MESSAGE = 'All the asteroids were destroyed'
+LOSE_TITLE = 'You lose!'
+LOSE_MESSAGE = 'You lost all of your lives'
+QUIT_TITLE = 'You Quit :('
+QUIT_MESSAGE = 'Quitters never win'
 
 
 class GameRunner:
@@ -53,6 +59,11 @@ class GameRunner:
         self._screen.update()
         self._screen.ontimer(self._do_loop, 5)
 
+    def _end_game(self, title, message):
+        Screen.show_message(self, title, message)
+        Screen.end_game(self._screen)
+        sys.exit()
+
     def _game_loop(self):
         if Screen.is_left_pressed(self._screen):
             self.ship.set_heading(self.ship.get_heading() + TURN_DEG)
@@ -81,6 +92,9 @@ class GameRunner:
 
         if Screen.is_space_pressed(self._screen):
             current_tor = Torpedo()
+            current_tor.set_heading(self.ship.get_heading())
+            current_tor.set_x(self.ship.get_x())
+            current_tor.set_y(self.ship.get_y())
             Screen.register_torpedo(self._screen, current_tor)
             Screen.draw_torpedo(self._screen, current_tor, Torpedo.get_x(
                 current_tor), Torpedo.get_y(current_tor),
@@ -91,6 +105,16 @@ class GameRunner:
             torpedo.move()
             self._screen.draw_torpedo(torpedo, torpedo.get_x(),
                                        torpedo.get_y(), torpedo.get_heading())
+
+        if len(self.asteroids) == 0:
+            self._end_game(WIN_TITLE, WIN_MESSAGE)
+
+        if len(self._screen._lives) == 0:
+            self._end_game(LOSE_TITLE, LOSE_MESSAGE)
+
+        if Screen.should_end(self._screen):
+            self._end_game(QUIT_TITLE, QUIT_MESSAGE)
+
 
 
 def main(amnt):
