@@ -14,6 +14,12 @@ from torpedo import Torpedo
 
 DEFAULT_ASTEROIDS_NUM = 12
 MAX_NUM_TORPEDOES = 15
+LRG_ASTEROID_POINTS = 20
+MED_ASTEROID_POINTS = 50
+SML_ASTEROID_POINTS = 100
+LRG_ASTEROID_SIZE = 3
+MED_ASTEROID_SIZE = 2
+SML_ASTEROID_SIZE = 1
 CRASH_TITLE = 'You crashed!'
 CRASH_MESSAGE = 'You lost a life'
 TURN_DEG = 7
@@ -36,7 +42,8 @@ class GameRunner:
         self.screen_min_y = Screen.SCREEN_MIN_Y
         self.asteroids = []
         self.torpedoes = []
-
+        self.current_score = 0
+        
         for asteroid in range(asteroids_amnt):
             current_ast = Asteroid()
             Screen.register_asteroid(self._screen, current_ast,
@@ -64,8 +71,11 @@ class GameRunner:
         Screen.show_message(self, title, message)
         Screen.end_game(self._screen)
         sys.exit()
+        
 
     def _game_loop(self):
+        
+        #Control ship.
         if Screen.is_left_pressed(self._screen):
             self.ship.set_heading(self.ship.get_heading() + TURN_DEG)
         if Screen.is_right_pressed(self._screen):
@@ -81,22 +91,34 @@ class GameRunner:
         Screen.draw_ship(self._screen, self.ship.get_x(), self.ship.get_y(),
                          self.ship.get_heading())
 
+        #Move asteroids.
         for asteroid in self.asteroids:
             asteroid.move()
             self._screen.draw_asteroid(asteroid, asteroid.get_x(),
                                        asteroid.get_y())
+            #Destroy asteroid if hits ship.
             if asteroid.has_intersection(self.ship):
                 Screen.show_message(self, CRASH_TITLE, CRASH_MESSAGE)
                 self._screen.remove_life()
                 self._screen.unregister_asteroid(asteroid)
                 self.asteroids.remove(asteroid)
+            #Destroy asteroid if hit by torpedo.
             for torpedo in self.torpedoes:
+                #Add points to the score.
                 if asteroid.has_intersection(torpedo):
+                    if asteroid.get_size() == LRG_ASTEROID_SIZE:
+                        self.current_score += LRG_ASTEROID_POINTS
+                    elif asteroid.get_size == MED_ASTEROID_SIZE:
+                        self.current_score += MED_ASTEROID_POINTS
+                    elif asteroid.get_size == SML_ASTEROID_SIZE:
+                        self.current_score += SML_ASTEROID_POINTS   
                     self._screen.unregister_asteroid(asteroid)
                     self.asteroids.remove(asteroid)
                     self._screen.unregister_torpedo(torpedo)
                     self.torpedoes.remove(torpedo)
 
+                    
+        #Fire torpeoes.                    
         if (Screen.is_space_pressed(self._screen) 
             and len(self.torpedoes) <= MAX_NUM_TORPEDOES):
             current_tor = Torpedo()
@@ -113,7 +135,10 @@ class GameRunner:
             torpedo.move()
             self._screen.draw_torpedo(torpedo, torpedo.get_x(),
                                        torpedo.get_y(), torpedo.get_heading())
-
+        
+        if self.current_score > 0:
+            Screen.set_score(self._screen, self.current_score)
+        
         if len(self.asteroids) == 0:
             self._end_game(WIN_TITLE, WIN_MESSAGE)
 
