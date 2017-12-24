@@ -12,7 +12,7 @@ from ship import Ship
 from asteroid import Asteroid
 from torpedo import Torpedo
 
-DEFAULT_ASTEROIDS_NUM = 1
+DEFAULT_ASTEROIDS_NUM = 5
 MAX_NUM_TORPEDOES = 15
 LRG_ASTEROID_POINTS = 20
 MED_ASTEROID_POINTS = 50
@@ -48,8 +48,8 @@ class GameRunner:
             current_ast = Asteroid()
             Screen.register_asteroid(self._screen, current_ast,
                                      current_ast.get_size())
-            Screen.draw_asteroid(self._screen, current_ast, Asteroid.get_x(
-                current_ast), Asteroid.get_y(current_ast))
+            Screen.draw_asteroid(self._screen, current_ast, current_ast.get_x(
+                ), current_ast.get_y())
             self.asteroids.append(current_ast)
 
     def run(self):
@@ -124,9 +124,9 @@ class GameRunner:
             current_tor.set_x(self.ship.get_x())
             current_tor.set_y(self.ship.get_y())
             Screen.register_torpedo(self._screen, current_tor)
-            Screen.draw_torpedo(self._screen, current_tor, Torpedo.get_x(
-                current_tor), Torpedo.get_y(current_tor),
-                                Torpedo.get_heading(current_tor))
+            Screen.draw_torpedo(self._screen, current_tor,
+                                current_tor.get_x(), current_tor.get_y(),
+                                current_tor.get_heading())
             self.torpedoes.append(current_tor)
 
         for torpedo in self.torpedoes:
