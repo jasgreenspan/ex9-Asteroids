@@ -10,11 +10,13 @@ import math
 
 TORPEDO_RADIUS = 4
 ACCELERATION_FACTOR = 2
+INITIAL_LIFESPAN = 0
 
 class Torpedo(MoveableObject):
     def __init__(self):
         MoveableObject.__init__(self)
         self.__radius = TORPEDO_RADIUS
+        self.__lifespan = INITIAL_LIFESPAN
 
     def get_heading(self):
         return self.__heading
@@ -30,3 +32,9 @@ class Torpedo(MoveableObject):
                          math.cos(math.radians(self.get_heading()))))
         self.set_y_speed(self.get_y_speed() + (ACCELERATION_FACTOR *
                          math.sin(math.radians(self.get_heading()))))
+
+    def get_lifespan(self):
+        return self.__lifespan
+
+    def get_older(self):
+        self.__lifespan += 1
