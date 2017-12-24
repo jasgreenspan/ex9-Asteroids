@@ -6,16 +6,15 @@
 # DESCRIPTION: Creates the torpedoes for asteroids game.
 ##############################################################################
 from moveable_object import MoveableObject
+import math
 
 TORPEDO_RADIUS = 4
-TORPEDO_SPEED = 10
+ACCELERATION_FACTOR = 2
 
 class Torpedo(MoveableObject):
     def __init__(self):
         MoveableObject.__init__(self)
         self.__radius = TORPEDO_RADIUS
-        self.set_x_speed(TORPEDO_SPEED)
-        self.set_y_speed(TORPEDO_SPEED)
 
     def get_heading(self):
         return self.__heading
@@ -26,5 +25,9 @@ class Torpedo(MoveableObject):
     def set_heading(self, heading):
         self.__heading = heading
 
-    def new_tor_speed_x(self):
-        pass
+    def move_tor(self):
+        self.set_x_speed(self.get_x_speed() + (ACCELERATION_FACTOR *
+                         math.cos(math.radians(self.get_heading()))))
+        self.set_y_speed(self.get_y_speed() + (ACCELERATION_FACTOR *
+                         math.sin(math.radians(self.get_heading()))))
+        self.move()
