@@ -50,7 +50,7 @@ class GameRunner:
             Screen.register_asteroid(self._screen, current_ast,
                                      current_ast.get_size())
             Screen.draw_asteroid(self._screen, current_ast, current_ast.get_x(
-                ), current_ast.get_y())
+            ), current_ast.get_y())
             self.asteroids.append(current_ast)
 
     def run(self):
@@ -72,7 +72,7 @@ class GameRunner:
         Screen.show_message(self, title, message)
         Screen.end_game(self._screen)
         sys.exit()
-        
+
     def split_asteroid(self, asteroid, torpedo):
         new_ast_1 = Asteroid()
         new_ast_2 = Asteroid()
@@ -82,17 +82,17 @@ class GameRunner:
             new_ast.set_x(asteroid.get_x())
             new_ast.set_y(asteroid.get_y())
         new_ast_1.set_x_speed((torpedo.get_x_speed() +
-                             asteroid.get_x_speed()) / math.sqrt((
-            asteroid.get_x_speed() ** 2) + asteroid.get_y_speed() ** 2))
+                               asteroid.get_x_speed()) / math.sqrt((
+                                                                       asteroid.get_x_speed() ** 2) + asteroid.get_y_speed() ** 2))
         new_ast_1.set_y_speed((torpedo.get_y_speed() +
-                             asteroid.get_y_speed()) / math.sqrt((
-            asteroid.get_x_speed() ** 2) + asteroid.get_y_speed() ** 2))
+                               asteroid.get_y_speed()) / math.sqrt((
+                                                                       asteroid.get_x_speed() ** 2) + asteroid.get_y_speed() ** 2))
         new_ast_2.set_x_speed(((torpedo.get_x_speed() +
-                             asteroid.get_x_speed()) / math.sqrt((
-            asteroid.get_x_speed() ** 2) + asteroid.get_y_speed() ** 2)) * -1)
+                                asteroid.get_x_speed()) / math.sqrt((
+                                                                        asteroid.get_x_speed() ** 2) + asteroid.get_y_speed() ** 2)) * -1)
         new_ast_2.set_y_speed(((torpedo.get_y_speed() +
-                             asteroid.get_y_speed()) / math.sqrt((
-            asteroid.get_x_speed() ** 2) + asteroid.get_y_speed() ** 2)) * -1)
+                                asteroid.get_y_speed()) / math.sqrt((
+                                                                        asteroid.get_x_speed() ** 2) + asteroid.get_y_speed() ** 2)) * -1)
         Screen.register_asteroid(self._screen, new_ast_1,
                                  new_ast_1.get_size())
         self.asteroids.append(new_ast_1)
@@ -164,10 +164,11 @@ class GameRunner:
             torpedo.move()
             self._screen.draw_torpedo(torpedo, torpedo.get_x(),
                                       torpedo.get_y(), torpedo.get_heading())
-#            if runtime > MAX_TORPEDO_LIFE:
-#                self._screen.unregister_torpedo(torpedo)
-#                self.torpedoes.remove(torpedo)
-                
+            torpedo.get_older()
+            if torpedo.get_lifespan() > MAX_TORPEDO_LIFE:
+                self._screen.unregister_torpedo(torpedo)
+                self.torpedoes.remove(torpedo)
+
 
         if self.current_score > 0:
             Screen.set_score(self._screen, self.current_score)
