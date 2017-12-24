@@ -25,9 +25,8 @@ class Torpedo(MoveableObject):
     def set_heading(self, heading):
         self.__heading = heading
 
-    def move_tor(self):
+    def set_torpedo_speed(self):
         self.set_x_speed(self.get_x_speed() + (ACCELERATION_FACTOR *
                          math.cos(math.radians(self.get_heading()))))
         self.set_y_speed(self.get_y_speed() + (ACCELERATION_FACTOR *
                          math.sin(math.radians(self.get_heading()))))
-        self.move()
