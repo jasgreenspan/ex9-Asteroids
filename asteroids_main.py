@@ -12,7 +12,7 @@ from ship import Ship
 from asteroid import Asteroid
 from torpedo import Torpedo
 
-DEFAULT_ASTEROIDS_NUM = 12
+DEFAULT_ASTEROIDS_NUM = 1
 MAX_NUM_TORPEDOES = 15
 LRG_ASTEROID_POINTS = 20
 MED_ASTEROID_POINTS = 50
@@ -43,7 +43,7 @@ class GameRunner:
         self.asteroids = []
         self.torpedoes = []
         self.current_score = 0
-        
+
         for asteroid in range(asteroids_amnt):
             current_ast = Asteroid()
             Screen.register_asteroid(self._screen, current_ast,
@@ -71,11 +71,10 @@ class GameRunner:
         Screen.show_message(self, title, message)
         Screen.end_game(self._screen)
         sys.exit()
-        
 
     def _game_loop(self):
-        
-        #Control ship.
+
+        # Control ship.
         if Screen.is_left_pressed(self._screen):
             self.ship.set_heading(self.ship.get_heading() + TURN_DEG)
         if Screen.is_right_pressed(self._screen):
@@ -91,35 +90,34 @@ class GameRunner:
         Screen.draw_ship(self._screen, self.ship.get_x(), self.ship.get_y(),
                          self.ship.get_heading())
 
-        #Move asteroids.
+        # Move asteroids.
         for asteroid in self.asteroids:
             asteroid.move()
             self._screen.draw_asteroid(asteroid, asteroid.get_x(),
                                        asteroid.get_y())
-            #Destroy asteroid if hits ship.
+            # Destroy asteroid if hits ship.
             if asteroid.has_intersection(self.ship):
                 Screen.show_message(self, CRASH_TITLE, CRASH_MESSAGE)
                 self._screen.remove_life()
                 self._screen.unregister_asteroid(asteroid)
                 self.asteroids.remove(asteroid)
-            #Destroy asteroid if hit by torpedo.
+            # Destroy asteroid if hit by torpedo.
             for torpedo in self.torpedoes:
-                #Add points to the score.
+                # Add points to the score.
                 if asteroid.has_intersection(torpedo):
                     if asteroid.get_size() == LRG_ASTEROID_SIZE:
                         self.current_score += LRG_ASTEROID_POINTS
-                    elif asteroid.get_size == MED_ASTEROID_SIZE:
+                    elif asteroid.get_size() == MED_ASTEROID_SIZE:
                         self.current_score += MED_ASTEROID_POINTS
-                    elif asteroid.get_size == SML_ASTEROID_SIZE:
-                        self.current_score += SML_ASTEROID_POINTS   
+                    elif asteroid.get_size() == SML_ASTEROID_SIZE:
+                        self.current_score += SML_ASTEROID_POINTS
                     self._screen.unregister_asteroid(asteroid)
                     self.asteroids.remove(asteroid)
                     self._screen.unregister_torpedo(torpedo)
                     self.torpedoes.remove(torpedo)
 
-                    
-        #Fire torpeoes.                    
-        if (Screen.is_space_pressed(self._screen) 
+        # Fire torpeoes.
+        if (Screen.is_space_pressed(self._screen)
             and len(self.torpedoes) <= MAX_NUM_TORPEDOES):
             current_tor = Torpedo()
             current_tor.set_heading(self.ship.get_heading())
@@ -128,17 +126,17 @@ class GameRunner:
             Screen.register_torpedo(self._screen, current_tor)
             Screen.draw_torpedo(self._screen, current_tor, Torpedo.get_x(
                 current_tor), Torpedo.get_y(current_tor),
-                                 Torpedo.get_heading(current_tor))
+                                Torpedo.get_heading(current_tor))
             self.torpedoes.append(current_tor)
 
         for torpedo in self.torpedoes:
-            torpedo.move()
+            torpedo.move_tor()
             self._screen.draw_torpedo(torpedo, torpedo.get_x(),
-                                       torpedo.get_y(), torpedo.get_heading())
-        
+                                      torpedo.get_y(), torpedo.get_heading())
+
         if self.current_score > 0:
             Screen.set_score(self._screen, self.current_score)
-        
+
         if len(self.asteroids) == 0:
             self._end_game(WIN_TITLE, WIN_MESSAGE)
 
@@ -147,7 +145,6 @@ class GameRunner:
 
         if Screen.should_end(self._screen):
             self._end_game(QUIT_TITLE, QUIT_MESSAGE)
-
 
 
 def main(amnt):
