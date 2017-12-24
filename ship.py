@@ -9,7 +9,7 @@ from moveable_object import MoveableObject
 
 INITIAL_HEADING = 0.0
 SHIP_RADIUS = 1
-MAX_SPEED = 5
+MAX_SPEED = 10
 
 class Ship(MoveableObject):
     def __init__(self):
