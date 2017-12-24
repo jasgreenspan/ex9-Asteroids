@@ -84,8 +84,8 @@ class GameRunner:
                 math.radians(self.ship.get_heading()))
             new_y_speed = self.ship.get_y_speed() + math.sin(
                 math.radians(self.ship.get_heading()))
-            self.ship.set_x_speed(new_x_speed)
-            self.ship.set_y_speed(new_y_speed)
+            self.ship.set_ship_x_speed(new_x_speed)
+            self.ship.set_ship_y_speed(new_y_speed)
         self.ship.move()
         Screen.draw_ship(self._screen, self.ship.get_x(), self.ship.get_y(),
                          self.ship.get_heading())
