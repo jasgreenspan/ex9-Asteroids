@@ -71,6 +71,33 @@ class GameRunner:
         Screen.show_message(self, title, message)
         Screen.end_game(self._screen)
         sys.exit()
+        
+    def split_asteroid(self, asteroid, torpedo):
+        new_ast_1 = Asteroid()
+        new_ast_2 = Asteroid()
+        new_ast_list = [new_ast_1, new_ast_2]
+        for new_ast in new_ast_list:
+            new_ast.set_size(asteroid.get_size() - 1)
+            new_ast.set_x(asteroid.get_x())
+            new_ast.set_y(asteroid.get_y())
+        new_ast_1.set_x_speed((torpedo.get_x_speed() +
+                             asteroid.get_x_speed()) / math.sqrt((
+            asteroid.get_x_speed() ** 2) + asteroid.get_y_speed() ** 2))
+        new_ast_1.set_y_speed((torpedo.get_y_speed() +
+                             asteroid.get_y_speed()) / math.sqrt((
+            asteroid.get_x_speed() ** 2) + asteroid.get_y_speed() ** 2))
+        new_ast_2.set_x_speed(((torpedo.get_x_speed() +
+                             asteroid.get_x_speed()) / math.sqrt((
+            asteroid.get_x_speed() ** 2) + asteroid.get_y_speed() ** 2)) * -1)
+        new_ast_2.set_y_speed(((torpedo.get_y_speed() +
+                             asteroid.get_y_speed()) / math.sqrt((
+            asteroid.get_x_speed() ** 2) + asteroid.get_y_speed() ** 2)) * -1)
+        Screen.register_asteroid(self._screen, new_ast_1,
+                                 new_ast_1.get_size())
+        self.asteroids.append(new_ast_1)
+        Screen.register_asteroid(self._screen, new_ast_2,
+                                 new_ast_2.get_size())
+        self.asteroids.append(new_ast_2)
 
     def _game_loop(self):
 
@@ -107,8 +134,10 @@ class GameRunner:
                 if asteroid.has_intersection(torpedo):
                     if asteroid.get_size() == LRG_ASTEROID_SIZE:
                         self.current_score += LRG_ASTEROID_POINTS
+                        self.split_asteroid(asteroid, torpedo)
                     elif asteroid.get_size() == MED_ASTEROID_SIZE:
                         self.current_score += MED_ASTEROID_POINTS
+                        self.split_asteroid(asteroid, torpedo)
                     elif asteroid.get_size() == SML_ASTEROID_SIZE:
                         self.current_score += SML_ASTEROID_POINTS
                     self._screen.unregister_asteroid(asteroid)
