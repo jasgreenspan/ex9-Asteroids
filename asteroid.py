@@ -11,14 +11,19 @@ from moveable_object import MoveableObject
 RADIUS_FACTOR = 10
 RADIUS_CORRECTER = 5
 ASTEROID_INITIAL_RADIUS = 3
-MIN_ASTEROID_SPEED = -3
+MIN_ASTEROID_SPEED = 1
 MAX_ASTEROID_SPEED = 3
+POSITIVE_DIRECTION = 1
+NEGATIVE_DIRECTION = -1
+
 
 
 class Asteroid(MoveableObject):
     def __init__(self):
-        x_speed = random.randint(MIN_ASTEROID_SPEED, MAX_ASTEROID_SPEED)
-        y_speed = random.randint(MIN_ASTEROID_SPEED, MAX_ASTEROID_SPEED)
+        x_speed = random.randint(MIN_ASTEROID_SPEED, MAX_ASTEROID_SPEED) * \
+                  random.choice((NEGATIVE_DIRECTION, POSITIVE_DIRECTION))
+        y_speed = random.randint(MIN_ASTEROID_SPEED, MAX_ASTEROID_SPEED) * \
+                  random.choice((NEGATIVE_DIRECTION, POSITIVE_DIRECTION))
         MoveableObject.__init__(self, x_speed, y_speed)
         self.__size = ASTEROID_INITIAL_RADIUS
 
