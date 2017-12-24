@@ -14,6 +14,7 @@ from torpedo import Torpedo
 
 DEFAULT_ASTEROIDS_NUM = 5
 MAX_NUM_TORPEDOES = 15
+MAX_TORPEDO_LIFE = 200
 LRG_ASTEROID_POINTS = 20
 MED_ASTEROID_POINTS = 50
 SML_ASTEROID_POINTS = 100
@@ -145,13 +146,14 @@ class GameRunner:
                     self._screen.unregister_torpedo(torpedo)
                     self.torpedoes.remove(torpedo)
 
-        # Fire torpeoes.
+        # Fire torpedoes.
         if (Screen.is_space_pressed(self._screen)
             and len(self.torpedoes) <= MAX_NUM_TORPEDOES):
             current_tor = Torpedo()
             current_tor.set_heading(self.ship.get_heading())
             current_tor.set_x(self.ship.get_x())
             current_tor.set_y(self.ship.get_y())
+            current_tor.set_torpedo_speed()
             Screen.register_torpedo(self._screen, current_tor)
             Screen.draw_torpedo(self._screen, current_tor,
                                 current_tor.get_x(), current_tor.get_y(),
@@ -159,9 +161,13 @@ class GameRunner:
             self.torpedoes.append(current_tor)
 
         for torpedo in self.torpedoes:
-            torpedo.move_tor()
+            torpedo.move()
             self._screen.draw_torpedo(torpedo, torpedo.get_x(),
                                       torpedo.get_y(), torpedo.get_heading())
+#            if runtime > MAX_TORPEDO_LIFE:
+#                self._screen.unregister_torpedo(torpedo)
+#                self.torpedoes.remove(torpedo)
+                
 
         if self.current_score > 0:
             Screen.set_score(self._screen, self.current_score)
