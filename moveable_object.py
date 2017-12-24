@@ -7,8 +7,6 @@
 import random
 from screen import Screen
 
-MAX_SPEED = 10
-
 class MoveableObject:    
     
     def __init__(self, x_speed = 0, y_speed = 0):
@@ -35,13 +33,11 @@ class MoveableObject:
     def get_y_speed(self):
         return self.__y_speed
 
-    def set_x_speed(self, xspeed):
-        if xspeed <= MAX_SPEED and xspeed >= -MAX_SPEED:
-            self.__x_speed = xspeed
+    def set_x_speed(self, x_speed):
+        self.__x_speed = x_speed
 
-    def set_y_speed(self, yspeed):
-        if yspeed <= MAX_SPEED and yspeed >= -MAX_SPEED:
-            self.__y_speed = yspeed
+    def set_y_speed(self, y_speed):
+        self.__y_speed = y_speed
 
     def move(self):
         new_x_coord = (self.__x_speed + self.__x - Screen.SCREEN_MIN_X) %(
