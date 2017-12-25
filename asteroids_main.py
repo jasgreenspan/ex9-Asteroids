@@ -153,6 +153,8 @@ class GameRunner:
             current_tor.set_heading(self.ship.get_heading())
             current_tor.set_x(self.ship.get_x())
             current_tor.set_y(self.ship.get_y())
+            current_tor.set_x_speed(self.ship.get_x_speed())
+            current_tor.set_y_speed(self.ship.get_y_speed())
             current_tor.set_torpedo_speed()
             Screen.register_torpedo(self._screen, current_tor)
             Screen.draw_torpedo(self._screen, current_tor,
