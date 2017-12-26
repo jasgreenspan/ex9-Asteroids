@@ -72,8 +72,52 @@ class GameRunner:
         Screen.show_message(self, title, message)
         Screen.end_game(self._screen)
         sys.exit()
+    
+    def _remove_asteroid(self, asteroid):
+        
+        self._screen.unregister_asteroid(asteroid)
+        self.asteroids.remove(asteroid)
+        
+    def _remove_torpedo(self, torpedo):
 
-    def split_asteroid(self, asteroid, torpedo):
+        self._screen.unregister_torpedo(torpedo)
+        self.torpedoes.remove(torpedo)
+    
+    def _fire_torpedo(self):
+        
+        # Set torpedo coordinates, heading, and speed from ship.
+        current_tor = Torpedo()
+        current_tor.set_x(self.ship.get_x())
+        current_tor.set_y(self.ship.get_y())
+        current_tor.set_heading(self.ship.get_heading())
+        current_tor.set_x_speed(self.ship.get_x_speed())
+        current_tor.set_y_speed(self.ship.get_y_speed())
+        current_tor.set_torpedo_speed()
+        Screen.register_torpedo(self._screen, current_tor)
+        Screen.draw_torpedo(self._screen, current_tor,
+                            current_tor.get_x(), current_tor.get_y(),
+                            current_tor.get_heading())
+        self.torpedoes.append(current_tor)
+        
+    def _set_split_asteroid_speed(self, asteroid, torpedo_x_speed,
+                                 torpedo_y_speed, asteroid_x_speed, 
+                                 asteroid_y_speed, positive = True):
+        if positive == True:
+            asteroid.set_x_speed((torpedo_x_speed + asteroid_x_speed) / 
+                                 math.sqrt((torpedo_x_speed ** 2) +
+                                           (asteroid_x_speed ** 2)))
+            asteroid.set_y_speed((torpedo_y_speed + asteroid_y_speed) / 
+                                 math.sqrt((torpedo_y_speed ** 2) +
+                                           (asteroid_y_speed ** 2)))
+        elif positive == False: # Set speed in opposite direction (times -1).
+            asteroid.set_x_speed((torpedo_x_speed + asteroid_x_speed) / 
+                                 math.sqrt((torpedo_x_speed ** 2) +
+                                           (asteroid_x_speed ** 2)) * -1)
+            asteroid.set_y_speed((torpedo_y_speed + asteroid_y_speed) / 
+                                 math.sqrt((torpedo_y_speed ** 2) +
+                                           (asteroid_y_speed ** 2)) * -1)
+    
+    def _split_asteroid(self, asteroid, torpedo):
         new_ast_1 = Asteroid()
         new_ast_2 = Asteroid()
         new_ast_list = [new_ast_1, new_ast_2]
@@ -83,23 +127,15 @@ class GameRunner:
             new_ast.set_y(asteroid.get_y())
         # Set speeds for new smaller asteroids using torepdo speed.
         # Set speed of one asteroid in the same direction.
-        new_ast_1.set_x_speed((torpedo.get_x_speed() +
-                               asteroid.get_x_speed()) / 
-                                math.sqrt((asteroid.get_x_speed() ** 2) + 
-                                          asteroid.get_y_speed() ** 2))
-        new_ast_1.set_y_speed((torpedo.get_y_speed() +
-                               asteroid.get_y_speed()) / 
-                                math.sqrt((asteroid.get_x_speed() ** 2) + 
-                                          asteroid.get_y_speed() ** 2))
+        self._set_split_asteroid_speed(new_ast_1, torpedo.get_x_speed(),
+                                      torpedo.get_y_speed(),
+                                      asteroid.get_x_speed(),
+                                      asteroid.get_y_speed())
         # Set speed of other asteroid in the opposite (times -1) direction.
-        new_ast_2.set_x_speed(((torpedo.get_x_speed() +
-                                asteroid.get_x_speed()) / 
-                                math.sqrt((asteroid.get_x_speed() ** 2) + 
-                                          asteroid.get_y_speed() ** 2)) * -1)
-        new_ast_2.set_y_speed(((torpedo.get_y_speed() +
-                                asteroid.get_y_speed()) / 
-                                math.sqrt((asteroid.get_x_speed() ** 2) + 
-                                          asteroid.get_y_speed() ** 2)) * -1)
+        self._set_split_asteroid_speed(new_ast_1, torpedo.get_x_speed(),
+                                      torpedo.get_y_speed(),
+                                      asteroid.get_x_speed(),
+                                      asteroid.get_y_speed(), False)
         # Add new asteroids.
         Screen.register_asteroid(self._screen, new_ast_1,
                                  new_ast_1.get_size())
@@ -138,42 +174,27 @@ class GameRunner:
                 Screen.show_message(self, CRASH_TITLE, CRASH_MESSAGE)
                 # Remove asteroid after intersection and lose life.
                 self._screen.remove_life()
-                self._screen.unregister_asteroid(asteroid)
-                self.asteroids.remove(asteroid)
+                self._remove_asteroid(asteroid)
             # Destroy asteroid if hit by torpedo.
             for torpedo in self.torpedoes:
                 # Add points to the score based off size of asteroid.
                 if asteroid.has_intersection(torpedo):
                     if asteroid.get_size() == LRG_ASTEROID_SIZE:
                         self.current_score += LRG_ASTEROID_POINTS
-                        self.split_asteroid(asteroid, torpedo)
+                        self._split_asteroid(asteroid, torpedo)
                     elif asteroid.get_size() == MED_ASTEROID_SIZE:
                         self.current_score += MED_ASTEROID_POINTS
-                        self.split_asteroid(asteroid, torpedo)
+                        self._split_asteroid(asteroid, torpedo)
                     elif asteroid.get_size() == SML_ASTEROID_SIZE:
                         self.current_score += SML_ASTEROID_POINTS
-                    # Remove asteroid and torpedo after intersection.
-                    self._screen.unregister_asteroid(asteroid)
-                    self.asteroids.remove(asteroid)
-                    self._screen.unregister_torpedo(torpedo)
-                    self.torpedoes.remove(torpedo)
+                    # Remove asteroid and torpedo after intersection.    
+                    self._remove_asteroid(asteroid)    
+                    self._remove_torpedo(torpedo)
 
         # Fire torpedoes when player presses space.
         if (Screen.is_space_pressed(self._screen)
             and len(self.torpedoes) <= MAX_NUM_TORPEDOES):
-            current_tor = Torpedo()
-            # Set torpedo coordinates, heading, and speed from ship.
-            current_tor.set_x(self.ship.get_x())
-            current_tor.set_y(self.ship.get_y())
-            current_tor.set_heading(self.ship.get_heading())
-            current_tor.set_x_speed(self.ship.get_x_speed())
-            current_tor.set_y_speed(self.ship.get_y_speed())
-            current_tor.set_torpedo_speed()
-            Screen.register_torpedo(self._screen, current_tor)
-            Screen.draw_torpedo(self._screen, current_tor,
-                                current_tor.get_x(), current_tor.get_y(),
-                                current_tor.get_heading())
-            self.torpedoes.append(current_tor)
+            self._fire_torpedo()
 
         for torpedo in self.torpedoes:
             torpedo.move()
@@ -182,8 +203,7 @@ class GameRunner:
             # Torpedo has a limited life-span.
             torpedo.get_older()
             if torpedo.get_lifespan() > MAX_TORPEDO_LIFE:
-                self._screen.unregister_torpedo(torpedo)
-                self.torpedoes.remove(torpedo)
+                self._remove_torpedo(torpedo)
 
         # Show new score if torpedo destroys asteroid.
         if self.current_score > 0:
