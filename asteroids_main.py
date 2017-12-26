@@ -132,7 +132,7 @@ class GameRunner:
                                       asteroid.get_x_speed(),
                                       asteroid.get_y_speed())
         # Set speed of other asteroid in the opposite (times -1) direction.
-        self._set_split_asteroid_speed(new_ast_1, torpedo.get_x_speed(),
+        self._set_split_asteroid_speed(new_ast_2, torpedo.get_x_speed(),
                                       torpedo.get_y_speed(),
                                       asteroid.get_x_speed(),
                                       asteroid.get_y_speed(), False)
