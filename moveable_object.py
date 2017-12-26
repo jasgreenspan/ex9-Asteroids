@@ -10,6 +10,7 @@ from screen import Screen
 class MoveableObject:    
     
     def __init__(self, x_speed = 0, y_speed = 0):
+        # Set random coordinates for new object.
         self.__x = random.randint(Screen.SCREEN_MIN_X, Screen.SCREEN_MAX_X)
         self.__y = random.randint(Screen.SCREEN_MIN_Y, Screen.SCREEN_MAX_Y)
         self.__x_speed = x_speed
