@@ -16,10 +16,9 @@ MAX_ASTEROID_SPEED = 3
 POSITIVE_DIRECTION = 1
 NEGATIVE_DIRECTION = -1
 
-
-
 class Asteroid(MoveableObject):
     def __init__(self):
+        # Give asteroid random speed and direction.
         x_speed = random.randint(MIN_ASTEROID_SPEED, MAX_ASTEROID_SPEED) * \
                   random.choice((NEGATIVE_DIRECTION, POSITIVE_DIRECTION))
         y_speed = random.randint(MIN_ASTEROID_SPEED, MAX_ASTEROID_SPEED) * \
@@ -38,6 +37,7 @@ class Asteroid(MoveableObject):
 
     def has_intersection(self, obj):
         intersection = False
+        # Calcutate distance between asteroid and intersecting object.
         distance = math.sqrt(((obj.get_x() - self.get_x()) ** 2) + (
             obj.get_y() - self.get_y()) ** 2)
         if distance <= self.get_radius() + obj.get_radius():
