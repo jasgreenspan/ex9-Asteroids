@@ -27,9 +27,11 @@ class Ship(MoveableObject):
         return self.__radius
     
     def set_ship_x_speed(self, x_speed):
+        # Only update x_speed if new speed is below limit (in both directions).
         if x_speed <= MAX_SPEED and x_speed >= -MAX_SPEED:  
             self.set_x_speed(x_speed)
     
     def set_ship_y_speed(self, y_speed):
+        # Only update y_speed if new speed is below limit (in both directions).
         if y_speed <= MAX_SPEED and y_speed >= -MAX_SPEED:
             self.set_y_speed(y_speed)
